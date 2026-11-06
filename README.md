@@ -1,36 +1,74 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Novel to EPUB Converter (Next.js + TypeScript)
 
-## Getting Started
+A production-ready Next.js application that converts serialized web novel series into reader-ready EPUB books. All heavy processing (content sanitization, formatting, and EPUB zip compilation) runs **100% client-side in the user's browser**.
 
-First, run the development server:
+Designed for one-click deployment to **Vercel**.
+
+---
+
+## 🚀 One-Click Deploy to Vercel
+
+### Method A: Deploy with Vercel CLI (Fastest)
+
+1. Ensure the Vercel CLI is installed:
+   ```bash
+   npm i -g vercel
+   ```
+2. Run deployment from the project directory:
+   ```bash
+   cd /home/exu/novel-to-epub-app
+   vercel
+   ```
+3. To deploy directly to production:
+   ```bash
+   vercel --prod
+   ```
+
+### Method B: Deploy via GitHub / GitLab
+
+1. Push this repository to GitHub:
+   ```bash
+   git init
+   git add .
+   git commit -m "feat: complete web novel to epub converter"
+   git remote add origin https://github.com/<your-username>/<your-repo>.git
+   git push -u origin main
+   ```
+2. Go to [vercel.com/new](https://vercel.com/new).
+3. Select your repository and click **Deploy**. Vercel will automatically detect Next.js and build it with zero configuration.
+
+---
+
+## 💻 Local Development
 
 ```bash
+# Using Bun (fastest)
+bun install
+bun run dev
+
+# Or using npm
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Visit [http://localhost:3000](http://localhost:3000) in your browser.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 🛠️ Architecture & Features
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- **100% In-Browser Computation**:
+  - The browser queries the novel's WordPress REST API directly with CORS support.
+  - HTML content is sanitized into strict XHTML using native `DOMParser`.
+  - EPUB archives are built entirely in browser memory using `JSZip` and downloaded via in-memory `Blob` URLs.
+  - Zero server database or background jobs needed.
+- **Auto Metadata & Cover Art**:
+  - Automatically parses English title, author, Chinese original title, and chapter count.
+  - Automatically pulls official cover art, with an automatic client-side HTML5 Canvas fallback cover generator if images are missing.
+- **Customizable Reading Styles**:
+  - Typography options: Classic Serif or Modern Sans-Serif.
+  - Indentation styles: Standard 1.5em first-line indent or block spacing.
+- **Dual EPUB 3 & EPUB 2 Navigation**:
+  - Generates both `nav.xhtml` (EPUB 3) and `toc.ncx` (EPUB 2) for universal compatibility with Kindle, Apple Books, Kobo, and Android e-readers.
+- **Optional Edge Proxy Route (`/api/proxy`)**:
+  - Built-in Next.js Edge route available if any third-party host ever requires a serverless CORS relay.
